@@ -1,16 +1,18 @@
-from sqlalchemy.ext.declarative import as_declarative, declared_attr
+from sqlalchemy.ext.declarative import as_declarative, declared_attr, declarative_base
 
 
-@as_declarative()
-class Base:
-    id: int
-    __name_: str
+# @as_declarative()
+# class Base:
+#     id: int
+#     __name_: str
 
-    # Automatically generate table names if not explicitly defined
-    @declared_attr
-    def __tablename__(cls) -> str:
-        return cls.__name_.lower()
+#     # Automatically generate table names if not explicitly defined
+#     @declared_attr
+#     def __tablename__(cls) -> str:
+#         return cls.__name_.lower()
 
 
-# from app.models.user import User
-# from app.models.item import Item
+# # from app.models.user import User
+# # from app.models.item import Item
+
+Base = declarative_base()

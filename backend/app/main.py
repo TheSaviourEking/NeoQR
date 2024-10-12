@@ -1,9 +1,18 @@
 from fastapi import FastAPI
 
+from app import models, db
 from app.api.v1.router import router as api_router
+from app.db.base import Base
+from app.db.session import engine
+
 
 app = FastAPI()
 
+Base.metadata.create_all(engine)
+
+# models.Base.metadata.create_all(db.base.engine)
+# db.base.Base.metadata.create_all(db.base.engine)
+# db.
 app.include_router(api_router, prefix="/api/v1")
 
 
