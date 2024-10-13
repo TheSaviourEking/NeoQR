@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
-from app.schemas.user import UserAuth
+from app.schemas.user import UserAuth, UserCreate
 from app.services.user_service import UserService
-from sqlalchemy.orm import Session
+
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.dependencies import get_db
-from app.schemas.user import UserCreate
 from app.core.security import Token
 
 router = APIRouter()
@@ -11,7 +11,7 @@ router = APIRouter()
 
 # LOGIN
 @router.post("/login", response_model=Token)
-async def login(user_data: UserAuth, db: Session = Depends(get_db)):
+async def login(user_data: UserAuth, db: AsyncSession = Depends(get_db)):
     user_service = UserService(db)
 
     logged_in_user = user_service.login_user(user_data)
@@ -19,9 +19,9 @@ async def login(user_data: UserAuth, db: Session = Depends(get_db)):
 
 
 @router.post("/signup")
-def signup(user_details: UserCreate, db: Session = Depends(get_db)):
+async def signup(user_details: UserCreate, db: AsyncSession = Depends(get_db)):
     user_service = UserService(db)
 
-    created_user = user_service.create_user(user_data=user_details)
+    created_user = await user_service.create_user(user_data=user_details)
 
     return created_user
