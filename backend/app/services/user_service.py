@@ -43,5 +43,5 @@ class UserService:
 
         else:
             # Create JWT token
-            access_token = create_access_token(data={"sub": login_user.email})
+            access_token = create_access_token(data={"sub": login_user.id})
             return {"access_token": access_token, "token_type": "Bearer"}
