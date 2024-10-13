@@ -4,12 +4,13 @@ from app.services.user_service import UserService
 from sqlalchemy.orm import Session
 from app.api.dependencies import get_db
 from app.schemas.user import UserCreate
+from app.core.security import Token
 
 router = APIRouter()
 
 
 # LOGIN
-@router.post("/login")
+@router.post("/login", response_model=Token)
 async def login(user_data: UserAuth, db: Session = Depends(get_db)):
     user_service = UserService(db)
 
