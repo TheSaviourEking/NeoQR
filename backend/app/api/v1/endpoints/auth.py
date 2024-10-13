@@ -10,7 +10,7 @@ async def login(user_data: UserAuth):
     return {"message": "here"}
 
 
-@router.get("/signup")
+@router.post("/signup")
 def signup():
     """heoooo"""
     return "here"
