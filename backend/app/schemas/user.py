@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from .profile import ProfileCreate
 
 
 class UserBase(BaseModel):
@@ -16,6 +17,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+    profile: ProfileCreate
 
 
 class UserUpdate(UserBase):

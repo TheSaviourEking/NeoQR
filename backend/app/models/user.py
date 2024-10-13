@@ -19,13 +19,18 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # If you want to relate this user to other entities, such as QR codes
     # qr_codes = relationship("QRCode", back_populates="owner")
-    # profile = relationship("Profile", back_populates="user")
+    # profile = relationship(
+    #     "Profile",
+    #     back_populates="user",
+    #     uselist=False,
+    #     cascade="all, delete-orphan",
+    #     lazy="joined",
+    # )
+    profile = relationship("Profile", back_populates="user", uselist=False)
 
-    def __repr__(self):
-        return f"User(firstname={self.firstname}, lastname={self.lastname}, id={self.id}, hashed_password={self.hashed_password})"
-
+    # def __repr__(self):
+    #     return f"<User id={self.id} email={self.email} firstname={self.firstname} lastname={self.lastname}>"
 
 
 class Profile(Base):
@@ -43,7 +48,8 @@ class Profile(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationship back to the User model
-    # user = relationship("User", back_populates="profile")
+    # user = relationship("User", back_populates="profile", lazy="joined")
+    user = relationship("User", back_populates="profile")
 
-    def __repr__(self) -> str:
-        return f"Address(id={self.id!r}, email_address={self.email_address!r})"
+    # def __repr__(self):
+    #     return f"<Profile id={self.id} user_id={self.user_id} bio={self.bio} profile_image={self.profile_image} website={self.website} location={self.location}>"
