@@ -1,7 +1,7 @@
-from sqlalchemy.ext.declarative import as_declarative, declared_attr, declarative_base
+from sqlalchemy.ext.declarative import declarative_base
+# from sqlmodel import
 
-
-# @as_declarative()
+# @as_declarative() 
 # class Base:
 #     id: int
 #     __name_: str
