@@ -5,10 +5,11 @@ from app.schemas.user import UserCreate, UserResponse
 router = APIRouter()
 
 
-@router.post("/")
+@router.post("/", response_model=UserResponse)
 async def create_user(user_data: UserCreate):
     # Logic to create a user
     # Call controller
+    # return {"message": "User created", "user": user_data}
     return {"message": "User created", "user": user_data}
 
 
