@@ -12,8 +12,8 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     # full_name = Column(String, nullable=True)
-    first_name = Column(String(100))
-    last_name = Column(String(100), nullable=False)
+    firstname = Column(String(100))
+    lastname = Column(String(100), nullable=False)
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -21,8 +21,11 @@ class User(Base):
 
     # If you want to relate this user to other entities, such as QR codes
     # qr_codes = relationship("QRCode", back_populates="owner")
-    qr_codes = relationship("QRCode", back_populates="owner")
-    profile = relationship("Profile", back_populates="user")
+    # profile = relationship("Profile", back_populates="user")
+
+    def __repr__(self):
+        return f"User(firstname={self.firstname}, lastname={self.lastname}, id={self.id}, hashed_password={self.hashed_password})"
+
 
 
 class Profile(Base):
@@ -40,7 +43,7 @@ class Profile(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationship back to the User model
-    user = relationship("User", back_populates="profile")
+    # user = relationship("User", back_populates="profile")
 
     def __repr__(self) -> str:
         return f"Address(id={self.id!r}, email_address={self.email_address!r})"

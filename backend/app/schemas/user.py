@@ -6,6 +6,8 @@ class UserBase(BaseModel):
     firstname: str
     lastname: str
     email: EmailStr
+    # hashed_password: str
+
     # is_active: Optional[bool] = True
     # full_name: Optional[str] = None
     # password: str
@@ -29,6 +31,6 @@ class UserResponse(UserBase):
 
 
 class UserAuth(BaseModel):
-    # email: EmailStr
+    email: EmailStr
     password: str
     # user_name: Optional[str] = None

@@ -18,4 +18,4 @@ class QRCode(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationship back to the User model
-    owner = relationship("User", back_populates="qr_codes")
+    # owner = relationship("User", back_populates="qr_codes")

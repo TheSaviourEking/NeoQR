@@ -4,8 +4,10 @@ ModelType = TypeVar("ModelType")
 CreateSchemaType = TypeVar("CreateSchemaType")
 UpdateSchemaType = TypeVar("UpdateSchemaType")
 
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
+from sqlalchemy.exc import IntegrityError, DataError, OperationalError
 
 
 class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
@@ -19,8 +21,11 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
         self.model = model
 
-    def get(self, db: Session, id: Any) -> ModelType:
-        return db.query(self.model).filter(self.model.id == id).first()
+    # def get(self, db: Session, id: Any) -> ModelType:
+    #     return db.query(self.model).filter(self.model.id == id).first()
+
+    def get(self, db: Session, field: str, value: Any) -> ModelType:
+        return db.query(self.model).filter(getattr(self.model, field) == value).first()
 
     def get_multi(
         self, db: Session, skip: int = 0, limit: int = 100
@@ -30,9 +35,30 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def create(self, db: Session, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(**obj_in_data)
+
         db.add(db_obj)
-        db.commit()
-        db.refresh(db_obj)
+
+        try:
+            db.commit()
+            db.refresh(db_obj)
+        except IntegrityError as e:
+            db.rollback()
+            # Handle the IntegrityError
+            raise HTTPException(status_code=400, detail=str(e.orig))
+        except IntegrityError as e:
+            db.rollback()
+            raise HTTPException(
+                status_code=400, detail="Integrity Error: " + str(e.orig)
+            )
+        except DataError as e:
+            db.rollback()
+            raise HTTPException(status_code=400, detail="Data Error: " + str(e.orig))
+        except OperationalError as e:
+            db.rollback()
+            raise HTTPException(
+                status_code=500, detail="Operational Error: " + str(e.orig)
+            )
+
         return db_obj
 
     def update(
