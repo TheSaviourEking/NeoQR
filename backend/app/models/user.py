@@ -1,10 +1,12 @@
-from app.db.base import Base
+from datetime import datetime
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from app.db.base import Base
 
 
 class User(Base):
+    """The User model"""
+
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -19,7 +21,8 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # qr_codes = relationship("QRCode", back_populates="owner")
+    qr_codes = relationship("QRCode", back_populates="user")
+
     # profile = relationship(
     #     "Profile",
     #     back_populates="user",
@@ -27,19 +30,25 @@ class User(Base):
     #     cascade="all, delete-orphan",
     #     lazy="joined",
     # )
-    profile = relationship("Profile", back_populates="user", uselist=False)
+
+    profile = relationship(
+        "Profile",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
 
     # def __repr__(self):
     #     return f"<User id={self.id} email={self.email} firstname={self.firstname} lastname={self.lastname}>"
 
 
 class Profile(Base):
+    """The User Profile Model"""
+
     __tablename__ = "user_profiles"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(
-        Integer, ForeignKey("users.id"), unique=True, nullable=False
-    )  # Foreign key linking to the User model
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
     bio = Column(Text, nullable=True)
     profile_image = Column(String, nullable=True)  # URL to the user's profile image
     website = Column(String, nullable=True)
