@@ -22,6 +22,7 @@ from datetime import datetime
 
 
 class QRCode(Base):
+    """ The QR code model """
     __tablename__ = "qr_codes"
 
     id = Column(Integer, primary_key=True, index=True)
